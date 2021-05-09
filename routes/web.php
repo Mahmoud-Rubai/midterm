@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
-
+/*
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('about', function () {
-    $name = "Jamal Alawadi";
+    $name = "mahmoed alrabaie";
     return view('about', compact('name'));
 });
 
@@ -75,5 +75,45 @@ Route::post('del/{id}', function (Request $d) {
     return redirect()->back();
 });
 
+//*******************mid************************ */
 
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/all', function () {
+    $products = DB::table('products')->get();
+    return view('createproduct', compact('products'));
+});
+Route::get('/create', function () {
+    return view('createproduct');
+});
+Route::post('/store', function (Request $r) {
+    DB::table('products')->insert([
+        'name' => $r->Product_Name,
+        'price' => $r->Product_Price,
+        'quantity' => $r->Product_Qty
+    ]);
+    return redirect()->back();
+});
+Route::get('del/{id}', function (Request $d, $id) {
 
+    $delete = DB::table('products')->where('id', '=', $id)->delete();
+    if ($delete) {
+        return redirect()->back();
+    }
+});
+Route::get('/form', function () {
+    return view('nameform');
+});
+
+Route::post('/nameform', function (Request $d, $id) {
+    $data = [
+        'name' => $d->Product_Name
+    ];
+    $result = DB::table('products')
+        ->where('id', $id)
+        ->update($data);
+    if ($result) {
+        return redirect()->back();
+    }
+});
